@@ -1,13 +1,35 @@
-ReplyTimeout = 500;
-OutTerminator = "\r\n";
-
 @writetimeout { disconnect; }
 @replytimeout { disconnect; }
 @readtimeout  { disconnect; }
 @mismatch     { disconnect; }
 
+ReplyTimeout = 500;
+InTerminator = "\r\n";
+OutTerminator = "\r\n";
+
 getIDN {
     out "PR VR";
     in "%\$1[^\r\n]";
     ExtraInput = Ignore;
+}
+
+getError {
+    out "PR ER";
+    in "%d";
+    ExtraInput = Ignore;
+}
+
+mcodeWriteUInt {
+    out "\$1 %u";
+    ExtraInput = Ignore;
+}
+
+mcodeReadInt {
+    out "\$1 \$2";
+    in "%d";
+}
+
+mcodeReadStr {
+    out "\$1 \$2";
+    in "%d";
 }

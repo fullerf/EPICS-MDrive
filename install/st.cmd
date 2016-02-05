@@ -5,6 +5,8 @@
 # Setup Environment
 < envPaths
 epicsEnvSet "STREAM_PROTOCOL_PATH" "$(TOP)/db"
+epicsEnvSet "EPICS_CA_AUTO_ADDR_LIST" "NO"
+epicsEnvSet "EPICS_CA_ADDR_LIST" "127.0.0.1"
 
 ##########################################
 # Allow PV prefixes and serial port name to be set from the environment
@@ -27,7 +29,7 @@ drvAsynIPPortConfigure("L0","192.168.33.1:503",0,0,0)
 #5th argument is noProcessEOS; 0 means do not close connection on timeout, 1 means close it
 ##########################################
 # Set up Motor Controller
-ImsMDrivePlusCreateController("IMS1", "L0", "", 200, 5000) #ethernet motors do not support party mode, so set arg3 to "".
+ImsMDrivePlusCreateController("IMS1", "L0", "", 5000, 5000) #ethernet motors do not support party mode, so set arg3 to "".
 
 
 
@@ -37,6 +39,7 @@ asynSetTraceMask("L0",0,255)
 
 ##########################################
 ## Load record instances
+dbLoadRecords("db/asynRecord.db","P=$(P),R=$(R):AsynRecord,PORT=L0,ADDR=-1,IMAX=100,OMAX=100")
 dbLoadRecords("db/devMDrive.db","P=$(P),R=$(R),PORT=L0,ADDR=0")
 dbLoadTemplate "db/motor.mdriveplus.substitutions"
 
